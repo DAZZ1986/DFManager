@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Create user</title>
+</head>
+<body>
+<!-- тут собрали объект с фронта и передали в контроллер в метод action="@{/user-create} и далее сохранили в БД -->
+<!-- выполнить действие которое указано по ссылке action="@{/user-create} POST -->
+<!-- имя объекта котоырый мы будем передавать th:object="${userObjParamCreate}" и передаем методом POST чтобы передать данные с фронта в БД -->
+<!-- по нажатию кнопки submit мы переходим в метод к контроллере {/user-create} -->
+    <form action="#" th:action="@{/player-creat}" th:object="${playerObjParamCreate}" method="post">
+
+        <label for="firstName_Label">First name</label>
+        <input type="text" th:field="*{firstname}" id="firstName_Label" placeholder="First Name">
+        <br/>
+        <label for="lastName_Label">Last name</label>
+        <input type="text" th:field="*{lastname}" id="lastName_Label" placeholder="Last Name">
+        <br/>
+        <label for="positionName_Label">Position</label>
+        <input type="text" th:field="*{position}" id="positionName_Label" placeholder="Position">
+        <br/>
+        <label for="skillLvl_Label">Skill Lvl</label>
+        <input type="number" th:field="*{skill_lvl}" id="skillLvl_Label" placeholder="Skill Lvl">
+        <br/>
+        <label for="price_Label">Price</label>
+        <input type="number" th:field="*{price}" id="price_Label" placeholder="Price">
+        <br/>
+        <label for="club_Label">Club</label>
+        <input type="text" th:field="*{club.id}" id="club_Label" placeholder="Club id">
+        <br/><br/>
+        <input type="submit" value="Create Player">
+    </form>
+</body>
+</html>

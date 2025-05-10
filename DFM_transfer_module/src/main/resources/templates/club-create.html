@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Create club</title>
+</head>
+<body>
+<!-- тут собрали объект с фронта и передали в контроллер в метод action="@{/user-create} и далее сохранили в БД -->
+<!-- выполнить действие которое указано по ссылке action="@{/user-create} POST -->
+<!-- имя объекта котоырый мы будем передавать th:object="${userObjParamCreate}" и передаем методом POST чтобы передать данные с фронта в БД -->
+<!-- по нажатию кнопки submit мы переходим в метод к контроллере {/user-create} -->
+    <form action="#" th:action="@{/club-create}" th:object="${clubObjParamCreate}" method="post">
+
+        <label for="clubName_Label">Club name</label>
+        <input type="text" th:field="*{name}" id="clubName_Label" placeholder="Club Name">
+        <br/>
+        <label for="balance_Label">Balance</label>
+        <input type="number" th:field="*{balance}" id="balance_Label" placeholder="Balance">
+        <br/><br/>
+        <input type="submit" value="Create Club">
+    </form>
+</body>
+</html>

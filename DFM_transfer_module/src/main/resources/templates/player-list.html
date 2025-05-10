@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Players list</title>
+</head>
+<body>
+
+<div th:switch="${playersAtt}">
+    <h2 th:case="null">No players found!</h2>
+
+    <div th:case="*">
+        <h2>Players list</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Position</th>
+                <th>Skill lvl</th>
+                <th>Price</th>
+                <th>Club id</th>
+                <th>Club link</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${playersAtt}">
+                <td th:text="${player.id}"></td>
+                <td th:text="${player.firstname}"></td>
+                <td th:text="${player.lastname}"></td>
+                <td th:text="${player.position}"></td>
+                <td th:text="${player.skill_lvl}"></td>
+                <td th:text="${#numbers.formatDecimal(player.price, 0, 'WHITESPACE', 0, 'DEFAULT')}"></td>
+                <!--<td th:text="${player.club.id}"></td>-->    <!-- выводится только id клуба, но если в БД null то падаем-->
+                <td th:text="${player.club != null ? player.club.id : 'Нет клуба'}"></td> <!-- Проверка на null -->
+
+                <!-- Проверка на null и вывод имени клуба -->
+                <td>
+                    <!-- Проверяем, есть ли у игрока клуб -->
+                    <span th:if="${player.club != null}">
+                        <!-- Ищем клуб по ID в списке clubs -->
+                        <a th:each="club : ${clubs}"
+                           th:if="${club.id == player.club.id}"
+                           th:href="@{club/{id}(id=${club.id})}"
+                           th:text="${club.name}">
+                        </a>
+                    </span>
+                    <span th:unless="${player.club != null}">Нет клуба</span>
+                </td>
+
+                <td><a th:href="@{player-upd/{id}(id=${player.id})}">Edit</a></td>
+                <td><a th:href="@{player-delete/{id}(id=${player.id})}">Delete</a></td> <!-- тут в урл мы подставляем id который вытянули из БД при отображении страницы -->
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <p><a href="/player-creat">Create player</a></p>
+    <p><a href="/clubs">Club list</a></p>
+    <p><a href="/transfer-list">Transfers</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Clubs list</title>
+</head>
+<body>
+
+<div th:switch="${clubsAtt}">
+  <h2 th:case="null">No clubs found!</h2>
+
+  <div th:case="*">
+    <h2>Clubs list</h2>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Club name</th>
+        <th>Club link</th>
+        <th>Balance</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="club : ${clubsAtt}">
+        <td th:text="${club.id}"></td>
+        <td th:text="${club.name}"></td>
+        <td><a th:href="@{club/{id}(id=${club.id})}" th:text="${club.name}"></a></td>
+        <!-- <td><a th:href="@{club/{id}(id=${club.id})}">[[${club.name}]]</a></td> -->  <!-- этот и способ выше оба рабочие, выбрал выше тк понравился более -->
+
+        <td th:text="${#numbers.formatDecimal(club.balance, 0, 'WHITESPACE', 0, 'DEFAULT')}"></td>
+        <td><a th:href="@{club-update/{id}(id=${club.id})}">Edit</a></td>
+        <td><a th:href="@{club-delete/{id}(id=${club.id})}">Delete</a></td> <!-- тут в урл мы подставляем id который вытянули из БД при отображении страницы -->
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <p><a href="/club-create">Create club</a></p>
+  <p><a href="/players">Player list</a></p>
+  <p><a href="/transfer-list">Transfers</a></p>
+</div>
+
+</body>
+</html>

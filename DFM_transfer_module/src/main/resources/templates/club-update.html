@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Update club</title>
+</head>
+<body>
+    <form action="#" th:action="@{/club-update}" th:object="${clubObjParamUpdate}" method="post">
+
+        <label for="id">ID</label>
+        <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+        <br/>
+        <label for="clubName_Label">Club name</label>
+        <input type="text" th:field="*{name}" id="clubName_Label" placeholder="Club Name">
+        <br/>
+        <label for="balance_Label">Balance</label>
+        <input type="number" th:field="*{balance}" id="balance_Label" placeholder="Balance">
+        <br/><br/>
+        <input type="submit" value="Update Club">
+    </form>
+</body>
+</html>

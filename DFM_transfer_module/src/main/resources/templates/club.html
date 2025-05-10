@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Club profile</title>
+</head>
+
+<body>
+<h1>Club profile</h1>
+
+
+<div th:switch="${club}">
+    <h2 th:case="null">No clubs found!</h2>
+
+    <div th:case="*">
+        <h3>Club info</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Club name</th>
+                <th>Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="club : ${club}">
+                <td th:text="${club.id}"></td>
+                <td th:text="${club.name}"></td>
+                <td th:text="${#numbers.formatDecimal(club.balance, 0, 'WHITESPACE', 0, 'DEFAULT')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div th:switch="${filteredPlayers}">
+    <h2 th:case="null">No players found!</h2>
+
+    <div th:case="*">
+        <h3>Players list</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Position</th>
+                <th>Skill lvl</th>
+                <th>Price</th>
+                <th>Club id</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${filteredPlayers}">
+                <td th:text="${player.id}"></td>
+                <td th:text="${player.firstname}"></td>
+                <td th:text="${player.lastname}"></td>
+                <td th:text="${player.position}"></td>
+                <td th:text="${player.skill_lvl}"></td>
+                <td th:text="${player.price}"></td>
+                <!--<td th:text="${player.club.id}"></td>-->    <!-- выводится только id клуба, но если в БД null то падаем-->
+                <td th:text="${player.club != null ? player.club.id : 'Нет клуба'}"></td> <!-- Проверка на null -->
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <p><a href="/clubs">Club list</a></p>
+    <p><a href="/players">Player list</a></p>
+</div>
+
+</body>
+</html>

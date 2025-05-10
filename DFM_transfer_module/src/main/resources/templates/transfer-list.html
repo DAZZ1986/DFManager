@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer list</title>
+</head>
+<body>
+
+<h1>Transfer list</h1>
+
+
+<div th:switch="${clubsList}">
+    <h2 th:case="null">No clubs found!</h2>
+
+    <div th:case="*">
+        <h2>Clubs list</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Club name</th>
+                <th>Club link</th>
+                <th>Balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="club : ${clubsList}">
+                <td th:text="${club.id}"></td>
+                <td th:text="${club.name}"></td>
+                <td><a th:href="@{club/{id}(id=${club.id})}" th:text="${club.name}"></a></td>
+                <!-- <td><a th:href="@{club/{id}(id=${club.id})}">[[${club.name}]]</a></td> -->  <!-- этот и способ выше оба рабочие, выбрал выше тк понравился более -->
+
+                <td th:text="${#numbers.formatDecimal(club.balance, 0, 'WHITESPACE', 0, 'DEFAULT')}"></td>
+                <td><a th:href="@{club-update/{id}(id=${club.id})}">Edit</a></td>
+                <td><a th:href="@{club-delete/{id}(id=${club.id})}">Delete</a></td> <!-- тут в урл мы подставляем id который вытянули из БД при отображении страницы -->
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<div th:switch="${transferPlayersList}">
+    <h2 th:case="null">No players found!</h2>
+
+    <div th:case="*">
+        <h2>Players list</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Position</th>
+                <th>Skill lvl</th>
+                <th>Price</th>
+                <th>Club</th>
+                <th>Выбрать клуб</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="player : ${transferPlayersList}">
+                    <td th:text="${player.id}"></td>
+                    <td th:text="${player.firstname}"></td>
+                    <td th:text="${player.lastname}"></td>
+                    <td th:text="${player.position}"></td>
+                    <td th:text="${player.skill_lvl}"></td>
+                    <td th:text="${#numbers.formatDecimal(player.price, 0, 'WHITESPACE', 0, 'DEFAULT')}"></td>
+
+                    <td th:text="${player.club != null ? player.club.id : 'Нет клуба'}"></td> <!-- Проверка на null -->
+                    <td>
+                        <form th:action="@{/transfer-list}" method="post" onsubmit="return handleSubmit(event)">    <!-- обработчик успешной отправки "<script> function handleSubmit..." -->
+                            <select name="clubId" required>  <!-- Без th:field -->
+                                <option value="">Select Club</option>
+                                <option th:each="club : ${clubsList}"
+                                        th:value="${club.id}"
+                                        th:text="${club.name}"
+                                        th:selected="${club.id == player.club?.id}">
+                                </option>
+                            </select>
+                            <input type="hidden" name="playerId" th:value="${player.id}" /> <!-- Скрытое поле для передачи ID игрока -->
+                            <button type="submit">Buy</button>                              <!-- Кнопка для отправки формы -->
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <p><a href="/clubs">Club list</a></p>
+    <p><a href="/players">Player list</a></p>
+</div>
+
+
+<script>
+function handleSubmit(event) {
+    event.preventDefault();
+    fetch(event.target.action, {
+        method: 'POST',
+        body: new URLSearchParams(new FormData(event.target))
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.reload(); // Принудительное обновление страницы
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    return false;
+}
+</script>
+</body>
+</html>
