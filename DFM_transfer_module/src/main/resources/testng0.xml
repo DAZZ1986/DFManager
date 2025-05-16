@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="TransferModule Suite">
+
+<test name="TransferTests">
+    <classes>
+        <class name="com.DFM.DFM_transfer_module.integration.transfer.TransferTest"/>
+    </classes>
+</test>
+
+</suite>

@@ -8,14 +8,22 @@
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+
+
 	<groupId>com.DFM</groupId>
 	<artifactId>DFM_transfer_module</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>DFM_transfer_module</name>
 	<description>DFM transfer module.</description>
+
 	<properties>
-		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<aspectj.version>1.9.20</aspectj.version>
 	</properties>
+
+
 
 
 	<dependencies>
@@ -44,19 +52,6 @@
 			<version>42.5.0</version> <!-- Убедитесь, что используете последнюю версию -->
 		</dependency>
 
-		<!-- Other -->
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.13.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
 		<!-- Broker -->
 		<dependency>
 			<groupId>org.springframework.amqp</groupId>
@@ -76,31 +71,121 @@
 			<artifactId>rest-assured</artifactId>
 			<version>5.5.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+
+
+		<!-- Other -->
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>7.11.0</version>
-			<scope>test</scope>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.13.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.5.18</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jcommander/jcommander -->
+		<dependency>
+			<groupId>org.jcommander</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>2.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-testng</artifactId>
+			<version>2.24.0</version> <!-- Актуальная версия -->
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ucp -->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ucp</artifactId>
+			<version>23.8.0.25.04</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.11.0</version>
 		</dependency>
 	</dependencies>
 
+
+
 	<build>
 		<plugins>
+			<!-- Обновите плагины для генерации сайта -->
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.12.1</version> <!-- Актуальная версия -->
+			</plugin>
+
+			<!-- Surefire Plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.1.2</version>
 				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
+					<!-- Указываем путь к testng.xml -->
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+
+					<!-- Дополнительные настройки (опционально) -->
+					<argLine>
+						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.20/aspectjweaver-1.9.20.jar"
+						--add-opens=java.base/java.lang=ALL-UNNAMED
+					</argLine>
+
+					<!-- Явно указываем, что используем TestNG -->
+					<testNGArtifactName>org.testng:testng</testNGArtifactName>
+					<includes>
+						<include>**/*Tests.java</include>  <!-- Для TransferTests.java -->
+						<include>**/*Test.java</include>  <!-- Для DfmTransferModuleApplicationTestsTest.java -->
+						<include>**/*Spec.java</include>  <!-- если используете Spock -->
+						<include>**/*Check.java</include> <!-- кастомные имена -->
+					</includes>
+				</configuration>
+				<dependencies>
+					<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+					<dependency>
+						<groupId>org.testng</groupId>
+						<artifactId>testng</artifactId>
+						<version>7.11.0</version>
+					</dependency>
+					<!-- Явно указываем зависимость TestNG для плагина -->
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjweaver</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<!-- Allure Maven Plugin -->
+			<plugin>
+				<groupId>io.qameta.allure</groupId>
+				<artifactId>allure-maven</artifactId>
+				<version>2.13.0</version>
+				<configuration>
+					<!-- Явно укажите пути -->
+					<resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+					<reportDirectory>${project.build.directory}/allure-report</reportDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>

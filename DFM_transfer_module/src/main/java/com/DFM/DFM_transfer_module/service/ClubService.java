@@ -4,6 +4,7 @@ import com.DFM.DFM_transfer_module.model.Club;
 import com.DFM.DFM_transfer_module.repository.ClubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class ClubService {
         return clubRepository.count();
     }
 
+    @Transactional
     public Club findById(Long id) {
         return clubRepository.getOne(id);
     }
